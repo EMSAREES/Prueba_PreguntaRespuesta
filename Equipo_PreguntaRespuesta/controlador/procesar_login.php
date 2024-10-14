@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = $result->fetch_assoc();
             $_SESSION['user_id'] = $usuario['Id_Usu'];
             $_SESSION['user_type'] = 'alumno'; // Guardamos el tipo de usuario
-            header("Location: /PreguntasRespuestas/preguntas.php"); // Redirigir al formulario de alumno
+            header("Location: /prueba_preguntarespuesta/Equipo_PreguntaRespuesta/preguntas.php"); // Redirigir al formulario de alumno
             exit();
         } else {
             $error = "Contraseña incorrecta para alumno.";
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tema = $result->fetch_assoc();
             $_SESSION['tema_id'] = $tema['Id_Tema'];
             $_SESSION['user_type'] = 'expositor'; // Guardamos el tipo de usuario
-            header("Location: /PreguntasRespuestas/ContenedorPregunta.php"); // Redirigir al formulario de expositor
+            header("Location: /prueba_preguntarespuesta/Equipo_PreguntaRespuesta/ContenedorPregunta.php"); // Redirigir al formulario de expositor
             exit();
         } else {
             $error = "Clave incorrecta para expositor.";

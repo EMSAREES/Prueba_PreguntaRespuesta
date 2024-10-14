@@ -40,19 +40,9 @@
 
 <!-------------------------------------------Parte de Adan----------------------------------->
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sistemajornada";
 
-// Crear conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
 
-// Verificar conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
-
+include($_SERVER['DOCUMENT_ROOT'] . '/PreguntasRespuestas/modelo/conexion.php');
 
 $sql = "SELECT Id_Pregunta, Id_autor, id_Tema, Pregunta, Contexto, Hora, Fecha, Estado FROM pregunta";
 $result = $conn->query($sql);
