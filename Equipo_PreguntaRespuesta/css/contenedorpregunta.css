@@ -77,3 +77,35 @@ body {
     align-items: center;
     flex-wrap: wrap;
 }
+
+.context-area {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Añadir barra de desplazamiento al texto */
+.scrollable-text {
+    max-height: 150px; /* Ajusta según lo necesario */
+    overflow-y: auto;
+}
+
+#btnEye {
+    width: 18svw;
+    height: 15svh;
+    border-radius: 50%
+}
+
+#imgEye {
+  
+    object-fit: fill;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#divPregunta{
+    margin: 1dvw;
+    
+}
+
+

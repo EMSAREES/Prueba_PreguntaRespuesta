@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Pregunta</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link href="/PreguntasRespuestas/css/contenedorpregunta.css" rel="stylesheet">
+
+    <!--     No borrar   -->
+    <link rel="stylesheet" href="css/contenedorpregunta.css">
+
 </head>
 <body>
 
@@ -41,6 +44,11 @@
 <!-------------------------------------------Parte de Adan----------------------------------->
 <?php
 
+<<<<<<< HEAD
+//include '../modelo/conexion.php'; // Asegúrate de que la ruta es correcta
+include($_SERVER['DOCUMENT_ROOT'] . '/PreguntasRespuestas/modelo/conexion.php');
+=======
+>>>>>>> a263398c853df9bc4f70b24d5355bbf1a2041c0b
 
 include($_SERVER['DOCUMENT_ROOT'] . '/PreguntasRespuestas/modelo/conexion.php');
 
@@ -50,17 +58,19 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         echo "<div class= 'container mt-5'>";
-            echo "<div class='card-body'>";
+            echo "<div id='divPregunta' class='card-body'>";
                 echo "<div class='row justify-content-between'>";
                     echo "<p class='card-text col-5'>Autor: " . $row["Id_autor"] . "</p>";
                     echo "<p class='card-text col-5 text-end'>" . $row["Hora"] . "</p>";
                     echo "<hr>";
                 echo "</div>";
-                echo "<p class='card-text'  style='margin-top: -3%;'><h2><B>" . $row["Pregunta"] . "</B></h2></p>";
+                echo "<p class='card-text'  style='margin-top: 0%;'><h2><B>" . $row["Pregunta"] . "</B></h2></p>";
                 echo "<div class='row justify-content-between'>";
-                    echo "<p class='card-text col-8'>" . $row["Contexto"] . "</p>";
-                    echo "<button type='image' class='btn col-3' style='margin-top: -10%;' onclick='window.open('pregunta_detalle.php', '_blank')'>";
-                        echo "<img id='eyeimg' src='https://cdn-icons-png.flaticon.com/512/159/159604.png' alt='' >";
+                    echo "<div Class='context-area col-8'>";
+                    echo "<p class='card-text scrollable-text'>" . $row["Contexto"] . "</p>";
+                    echo "</div>";
+                    echo "<button id='btnEye' type='image' class='btn col-3' style='margin-top: 0%;' onclick='window.open('pregunta_detalle.php', '_blank')'>";
+                        echo "<img id='imgEye' src='https://cdn-icons-png.flaticon.com/512/159/159604.png' alt='' >";
                     echo "</button> ";
                 echo "</div>";
             echo "</div>";
@@ -72,6 +82,13 @@ if ($result->num_rows > 0) {
 }
 $conn->close();
 ?>
+
+<script>
+ document.getElementById("btnEye").onclick = function() {
+            this.style.backgroundColor = "rgb(94, 229, 94)";
+        };
+</script>
+       
     
 
 
