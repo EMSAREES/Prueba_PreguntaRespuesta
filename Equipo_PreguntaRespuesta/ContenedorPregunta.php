@@ -7,13 +7,11 @@
     <title>Formulario de Pregunta</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link href="/PreguntasRespuestas/css/contenedorpregunta.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-
 <body>
 
-<!-- Parte de Ricardo: Búsqueda de preguntas -->
+<!--------------------------------------Parte de Ricardo--------------------------------->
+
 <div class="search-container">
     <!-- Flecha hacia atrás -->
     <div class="d-flex align-items-center mb-3">
@@ -29,7 +27,15 @@
     </div>
 
     <!-- Contenedor de etiquetas dinámicas -->
-    <div class="tag-container" id="tag-container"></div>
+    <div class="tag-container" id="tag-container">
+        <div class="tag">
+            Negocio <i class="bi bi-x" onclick="removeTag(this)"></i>
+        </div>
+        <div class="tag">
+            Pytho <i class="bi bi-x" onclick="removeTag(this)"></i>
+        </div>
+        <button class="filter-btn">Reciente</button>
+    </div>
 </div>
 
 <!-------------------------------------------Parte de Adan----------------------------------->
@@ -47,23 +53,8 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Obtener el filtro desde la URL
-$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
-$filterArray = explode(',', $filter);
 
-// Base de la consulta
-$sql = "SELECT Id_Pregunta, Id_autor, id_Tema, Pregunta, Contexto, Hora, Fecha, Estado FROM pregunta WHERE 1=1";
-
-// Aplicar filtro si hay etiquetas
-if (!empty($filterArray)) {
-    foreach ($filterArray as $filtro) {
-        $filtro = trim($filtro);
-        if (!empty($filtro)) {
-            $sql .= " AND (Pregunta LIKE '%$filtro%' OR Contexto LIKE '%$filtro%')";
-        }
-    }
-}
-
+$sql = "SELECT Id_Pregunta, Id_autor, id_Tema, Pregunta, Contexto, Hora, Fecha, Estado FROM pregunta";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -78,77 +69,43 @@ if ($result->num_rows > 0) {
                 echo "<p class='card-text'  style='margin-top: -3%;'><h2><B>" . $row["Pregunta"] . "</B></h2></p>";
                 echo "<div class='row justify-content-between'>";
                     echo "<p class='card-text col-8'>" . $row["Contexto"] . "</p>";
-                    echo "<button type='button' class='btn col-3' style='margin-top: -10%;' onclick=\"window.open('pregunta_detalle.php', '_blank')\">";
-                        echo "<img id='eyeimg' src='https://cdn-icons-png.flaticon.com/512/159/159604.png' alt='Ver Detalle'>";
-                    echo "</button>";
+                    echo "<button type='image' class='btn col-3' style='margin-top: -10%;' onclick='window.open('pregunta_detalle.php', '_blank')'>";
+                        echo "<img id='eyeimg' src='https://cdn-icons-png.flaticon.com/512/159/159604.png' alt='' >";
+                    echo "</button> ";
                 echo "</div>";
             echo "</div>";
         echo "</div>";
+    echo "</div>";
     }
 } else {
     echo "0 resultados";
 }
-
 $conn->close();
 ?>
+    
 
-<!-- Bootstrap JS -->
+
+
+
+
+
+<!-- 
+
+
+-->
+
+
+    
+
+    <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Bootstrap Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<!-- Archivo JavaScript -->
+<script src="script.js"></script>
 
-<!-- Script de Etiquetas / Ricardo -->
-<script>
-    // Función para agregar una nueva etiqueta
-    function addTag(tagText) {
-        const tagContainer = document.getElementById('tag-container');
-        const tag = document.createElement('div');
-        tag.classList.add('tag');
-        tag.innerHTML = `${tagText} <i class="bi bi-x" onclick="removeTag(this)"></i>`;
-        tagContainer.appendChild(tag);
-        filterQuestions(); // Filtrar preguntas después de agregar la etiqueta
-    }
-
-    // Función para eliminar una etiqueta
-    function removeTag(element) {
-        element.parentElement.remove();
-        filterQuestions(); // Filtrar preguntas después de eliminar la etiqueta
-    }
-
-    // Función para filtrar preguntas en base a etiquetas
-    function filterQuestions() {
-        const tags = Array.from(document.querySelectorAll('.tag')).map(tag => tag.textContent.trim());
-        const tagString = tags.join(',');
-        fetch(`ContenedorPregunta.php?filter=${encodeURIComponent(tagString)}`)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('question-results').innerHTML = data;
-            });
-    }
-
-    // Evento para añadir la etiqueta cuando se hace clic en el botón de búsqueda
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('add-tag-btn').addEventListener('click', function () {
-            const tagInput = document.getElementById('tag-input');
-            if (tagInput.value.trim() !== '') {
-                addTag(tagInput.value.trim());
-                tagInput.value = ''; // Limpiar el input
-            }
-        });
-
-        // Permitir añadir etiquetas presionando Enter
-        document.getElementById('tag-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                const tagInput = document.getElementById('tag-input');
-                if (tagInput.value.trim() !== '') {
-                    addTag(tagInput.value.trim());
-                    tagInput.value = ''; // Limpiar el input
-                }
-                e.preventDefault();
-            }
-        });
-    });
-</script>
-
+</body>
+</html>
+    </div>
 </body>
 </html>
