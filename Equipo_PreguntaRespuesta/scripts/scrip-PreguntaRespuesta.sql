@@ -1,11 +1,3 @@
-
--- Crear tabla tbl_tema
-CREATE TABLE Tema (
-    Id_Tema INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(30) NOT NULL,
-    Clave CHAR(5) NOT NULL
-);
-
 -- Crear tabla tbl_Pregunta
 CREATE TABLE Pregunta (
     Id_Pregunta INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,

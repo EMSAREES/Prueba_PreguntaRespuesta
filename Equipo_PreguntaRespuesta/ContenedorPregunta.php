@@ -43,66 +43,69 @@
 
 <!-------------------------------------------Parte de Adan----------------------------------->
 <?php
-
-<<<<<<< HEAD
-//include '../modelo/conexion.php'; // Asegúrate de que la ruta es correcta
-include($_SERVER['DOCUMENT_ROOT'] . '/PreguntasRespuestas/modelo/conexion.php');
-=======
->>>>>>> a263398c853df9bc4f70b24d5355bbf1a2041c0b
-
 include($_SERVER['DOCUMENT_ROOT'] . '/PreguntasRespuestas/modelo/conexion.php');
 
-$sql = "SELECT Id_Pregunta, Id_autor, id_Tema, Pregunta, Contexto, Hora, Fecha, Estado FROM pregunta";
+// Realizamos un JOIN entre la tabla Pregunta y Usuario
+$sql = "SELECT p.Id_Pregunta, 
+               p.Pregunta, 
+               p.Contexto, 
+               p.Hora, 
+               p.Fecha, 
+               u.Nombre_Usu, 
+               u.Apellidos_Usu
+        FROM Pregunta p
+        LEFT JOIN Usuario u ON p.Id_Autor = u.Id_Usu";
+
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        echo "<div class= 'container mt-5'>";
-            echo "<div id='divPregunta' class='card-body'>";
-                echo "<div class='row justify-content-between'>";
-                    echo "<p class='card-text col-5'>Autor: " . $row["Id_autor"] . "</p>";
-                    echo "<p class='card-text col-5 text-end'>" . $row["Hora"] . "</p>";
-                    echo "<hr>";
+        echo "<div class='container mt-4'>"; // Agregamos margen superior
+            echo "<div class='card'>"; // Creamos una tarjeta para cada pregunta
+                echo "<div class='card-body'>"; // Contenido de la tarjeta
+                
+                echo "<div class='d-flex justify-content-between align-items-center mb-2'>";
+                    // Verificamos si el autor existe y mostramos "Anónimo" si es nulo o vacío
+                    $autor = (!empty($row["Nombre_Usu"])) ? $row["Nombre_Usu"] . " " . $row["Apellidos_Usu"] : "Anónimo";
+                    echo "<p class='card-text mb-0'><strong>Autor: </strong>" . $autor . "</p>";
+                    echo "<p class='card-text mb-0'><small class='text-muted'>" . $row["Hora"] . "</small></p>";
                 echo "</div>";
-                echo "<p class='card-text'  style='margin-top: 0%;'><h2><B>" . $row["Pregunta"] . "</B></h2></p>";
-                echo "<div class='row justify-content-between'>";
-                    echo "<div Class='context-area col-8'>";
-                    echo "<p class='card-text scrollable-text'>" . $row["Contexto"] . "</p>";
-                    echo "</div>";
-                    echo "<button id='btnEye' type='image' class='btn col-3' style='margin-top: 0%;' onclick='window.open('pregunta_detalle.php', '_blank')'>";
-                        echo "<img id='imgEye' src='https://cdn-icons-png.flaticon.com/512/159/159604.png' alt='' >";
-                    echo "</button> ";
+                
+                echo "<h4 class='card-title'>" . $row["Pregunta"] . "</h4>"; // Título de la pregunta
+
+                echo "<div Class='context-area col-8'>";
+                echo "<p class='card-text scrollable-text'>" . $row["Contexto"] . "</p>"; // Contexto de la pregunta
                 echo "</div>";
-            echo "</div>";
-        echo "</div>";
-    echo "</div>";
+                
+                echo "<div class='d-flex justify-content-end align-items-center'>"; // Botón de vista en el lado derecho
+                    echo "<button class='btnEye btn' style='border: none; background: none;'>"; // Botón sin fondo
+                        echo "<img class='imgEye' src='https://cdn-icons-png.flaticon.com/512/159/159604.png' alt='Ver detalle' style='width: 50px; height: 50px;'>"; // Imagen de ojo
+                    echo "</button>";
+                echo "</div>";
+
+                echo "</div>"; // Fin de card-body
+            echo "</div>"; // Fin de tarjeta (card)
+        echo "</div>"; // Fin de contenedor
     }
 } else {
     echo "0 resultados";
 }
+
 $conn->close();
 ?>
 
+
 <script>
- document.getElementById("btnEye").onclick = function() {
+    // Seleccionamos todos los botones con la clase 'btnEye'
+    document.querySelectorAll('.btnEye').forEach(button => {
+        button.addEventListener('click', function() {
+            // Cambiamos el color de fondo del botón clicado
             this.style.backgroundColor = "rgb(94, 229, 94)";
-        };
+        });
+    });
 </script>
-       
-    
 
 
-
-
-
-
-<!-- 
-
-
--->
-
-
-    
 
     <!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

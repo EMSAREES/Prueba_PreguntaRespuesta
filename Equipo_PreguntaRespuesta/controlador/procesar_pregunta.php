@@ -20,7 +20,7 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'alumno') {
 
 
 //include '../modelo/conexion.php'; // Asegúrate de que la ruta es correcta
-include($_SERVER['DOCUMENT_ROOT'] . '/PreguntasRespuestas/modelo/conexion.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/prueba_preguntarespuesta/Equipo_PreguntaRespuesta/modelo/conexion.php');
 
 // Simulación de inicio de sesión
 //$_SESSION['user_id'] = 1; // Cambia esto según el usuario que haya iniciado sesión
@@ -43,7 +43,7 @@ if ($result && $result->num_rows > 0) {
 $autores = ['Anonimo', $user_name];
 
 // Obtener el nombre del usuario que ha iniciado sesión
-$sql = "SELECT Nombre FROM tema";
+$sql = "SELECT Tema_ponente FROM ponentes";
 $result = $conn->query($sql);
 
 $expositores = []; // Inicializamos el array
@@ -51,7 +51,7 @@ $expositores = []; // Inicializamos el array
 if ($result && $result->num_rows > 0) {
     //Rellenar el array con los nombres de los expositores
     while ($row = $result->fetch_assoc()) {
-        $expositores[] = $row['Nombre'];
+        $expositores[] = $row['Tema_ponente'];
     }
 } else {
     echo "Error: No se pudieron obtener los temas.";
@@ -78,7 +78,7 @@ if (isset($_POST['btnAceptar'])) {
     // Insertar los datos en la tabla tbl_Pregunta
     $sql = "INSERT INTO pregunta (Id_Autor, id_Tema, Pregunta, Contexto, Hora, Fecha, Estado) 
             VALUES ((SELECT Id_Usu FROM usuario WHERE Nombre_Usu = ?), 
-                    (SELECT Id_Tema FROM tema WHERE Nombre = ?),
+                    (SELECT id_ponente FROM ponentes WHERE Tema_ponente = ?),
                     ?, ?, ?, ?, 1)";
 
     $stmt = $conn->prepare($sql);
