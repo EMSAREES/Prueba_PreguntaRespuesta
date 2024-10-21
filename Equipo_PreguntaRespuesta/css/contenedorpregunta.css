@@ -122,3 +122,45 @@ body {
 .card-body {
     padding: 20px;
 }
+
+
+/* --- NUEVO CSS AGREGADO PARA LAS ETIQUETAS --- */
+.tag {
+    background-color: #343a40;
+    color: white;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 14px;
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tag i {
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+.tag i:hover {
+    color: #ff4d4d;
+}
+
+.filter-btn {
+    background-color: #28a745;
+    color: white;
+    border-radius: 20px;
+    padding: 5px 15px;
+    border: none;
+}
+
+.filter-btn:hover {
+    background-color: #218838;
+}
+
+.tag-container {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+/* --- FIN DEL NUEVO CSS --- */

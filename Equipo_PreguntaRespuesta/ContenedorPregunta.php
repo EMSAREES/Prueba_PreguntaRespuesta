@@ -1,3 +1,18 @@
+
+<?php
+session_start(); // Asegúrate de iniciar la sesión al principio
+
+// Verifica si el usuario ha iniciado sesión como expositor
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'expositor') {
+    header("Location: login.php"); // Redirige a la página de inicio de sesión
+    exit(); // Asegúrate de que el script se detenga después de la redirección
+}
+
+
+// Supongamos que tienes el tema o ponente guardado en la sesión
+$tema_ponente = isset($_SESSION['tema_ponente']) ? $_SESSION['tema_ponente'] : '';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,10 +30,18 @@
 
 <!--------------------------------------Parte de Ricardo--------------------------------->
 
+
 <div class="search-container">
     <!-- Flecha hacia atrás -->
     <div class="d-flex align-items-center mb-3">
-        <i class="back-button bi bi-arrow-left"></i>
+        <button class="btn btn-light me-2" aria-label="Regresar" onclick="logout();">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-narrow-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M5 12l14 0" />
+                    <path d="M5 12l4 4" />
+                    <path d="M5 12l4 -4" />
+                </svg>
+        </button>
         <h1 class="ms-3">Preguntas</h1>
     </div>
 
@@ -26,20 +49,130 @@
     <div class="input-group mb-3">
         <span class="input-group-text"><i class="bi bi-list"></i></span>
         <input type="text" class="form-control search-input" id="tag-input" placeholder="Añadir nueva etiqueta">
-        <span class="input-group-text" id="add-tag-btn"><i class="bi bi-search"></i></span>
     </div>
 
-    <!-- Contenedor de etiquetas dinámicas -->
-    <div class="tag-container" id="tag-container">
-        <div class="tag">
-            Negocio <i class="bi bi-x" onclick="removeTag(this)"></i>
-        </div>
-        <div class="tag">
-            Pytho <i class="bi bi-x" onclick="removeTag(this)"></i>
-        </div>
-        <button class="filter-btn">Reciente</button>
+    <!-- Botones para añadir etiquetas o buscar -->
+    <div class="mb-3">
+        <button class="btn btn-primary" id="add-tag-btn">Añadir palabra clave/etiqueta</button>
+        <button class="btn btn-success" id="search-btn">Buscar</button>
     </div>
+    
+
+    <div class="tag-container d-flex gap-2 flex-wrap" id="tag-container">
+        <!-- Aquí se agregan las etiquetas dinámicamente -->       
+    </div>
+  
 </div>
+
+<!-- JavaScript -->
+<script>
+let tags = [];
+
+// Agrega el tema o ponente del usuario al array de etiquetas
+const tema_ponente = "<?php echo htmlspecialchars($tema_ponente); ?>"; // Obtiene el tema o ponente de PHP
+
+if (tema_ponente) {
+    tags.push(tema_ponente); // Añade el tema o ponente a las etiquetas
+    addTagToContainer(tema_ponente); // Muestra la etiqueta en el contenedor
+}
+
+console.log("Etiquetas iniciales:", tags);
+
+// Añadir etiquetas al hacer clic en "Añadir palabra clave/etiqueta"
+document.getElementById('add-tag-btn').addEventListener('click', function() {
+    console.log("Botón 'Añadir palabra clave/etiqueta' clicado");
+    const input = document.getElementById('tag-input');
+    const tagValue = input.value.trim();
+
+    console.log("Valor del campo de entrada:", tagValue);
+    
+    // Verifica si el campo no está vacío y si la etiqueta no existe ya
+    if (tagValue && !tags.includes(tagValue)) {
+        tags.push(tagValue);
+        console.log("Etiqueta añadida:", tagValue);
+        console.log("Lista de etiquetas actualizada:", tags);
+        addTagToContainer(tagValue);
+        input.value = '';  // Limpia el campo de entrada después de añadir
+    } else {
+        console.log("La etiqueta ya existe o el valor está vacío");
+    }
+});
+
+// Función para añadir una etiqueta al contenedor de etiquetas
+function addTagToContainer(tag) {
+    const tagContainer = document.getElementById('tag-container');
+    const tagElement = document.createElement('div');
+    tagElement.classList.add('tag');
+    tagElement.innerHTML = `${tag} <i class="bi bi-x" onclick="removeTag(this, '${tag}')"></i>`;
+    tagContainer.appendChild(tagElement);
+}
+
+// Función para eliminar una etiqueta del contenedor
+function removeTag(element, tag) {
+    const index = tags.indexOf(tag);
+    if (index !== -1) {
+        tags.splice(index, 1);
+    }
+    element.parentElement.remove();
+}
+
+// Funcionalidad de búsqueda
+document.getElementById('search-btn').addEventListener('click', function() {
+    if (tags.length > 0) {
+        const queryString = tags.map(tag => `tags[]=${encodeURIComponent(tag)}`).join('&');
+        window.location.href = `/prueba_preguntarespuesta/Equipo_PreguntaRespuesta/controlador/procesar_busqueda.php?${queryString}`;
+    } else {
+        alert('Por favor, añade al menos una etiqueta antes de buscar.');
+    }
+});
+
+// Función para añadir una etiqueta al contenedor de etiquetas
+function addTagToContainer(tag) {
+    console.log("Añadiendo etiqueta al contenedor:", tag);
+    const tagContainer = document.getElementById('tag-container');
+    
+    // Crear un elemento div para la etiqueta
+    const tagElement = document.createElement('div');
+    tagElement.classList.add('tag');
+    // Añadir el texto de la etiqueta y un icono para eliminarla
+    tagElement.innerHTML = `${tag} <i class="bi bi-x" onclick="removeTag(this, '${tag}')"></i>`;
+    
+    // Añadir la etiqueta al contenedor
+    tagContainer.appendChild(tagElement);
+    console.log("Etiqueta añadida al contenedor con éxito");
+}
+
+// Función para eliminar una etiqueta del contenedor
+function removeTag(element, tag) {
+    console.log("Eliminando etiqueta:", tag);
+    // Encuentra el índice de la etiqueta en el array y elimínala
+    const index = tags.indexOf(tag);
+    if (index !== -1) {
+        tags.splice(index, 1);
+        console.log("Etiqueta eliminada del array:", tag);
+        console.log("Lista de etiquetas actualizada:", tags);
+    }
+    // Elimina el elemento visual de la etiqueta
+    element.parentElement.remove();
+    console.log("Etiqueta eliminada del contenedor visual");
+}
+
+// Funcionalidad de búsqueda y redirección a "procesar_busqueda.php"
+document.getElementById('search-btn').addEventListener('click', function() {
+    console.log("Botón 'Buscar' clicado");
+    if (tags.length > 0) {
+        // Construir la cadena de consulta con las etiquetas
+        const queryString = tags.map(tag => `tags[]=${encodeURIComponent(tag)}`).join('&');
+        console.log("Redirigiendo con la cadena de consulta:", queryString);
+        // Redirigir al archivo PHP con las etiquetas como parámetros
+        window.location.href = `/prueba_preguntarespuesta/Equipo_PreguntaRespuesta/controlador/procesar_busqueda.php?${queryString}`;
+    } else {
+        // Alerta si no se ha añadido ninguna etiqueta
+        console.log("Intento de búsqueda sin etiquetas");
+        alert('Por favor, añade al menos una etiqueta antes de buscar.');
+    }
+});
+</script>
 
 <!-------------------------------------------Parte de Adan----------------------------------->
 <?php
@@ -113,6 +246,15 @@ $conn->close();
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <!-- Archivo JavaScript -->
 <script src="script.js"></script>
+
+    <script>
+       
+        function logout() {
+            // Redirigir a un script PHP que destruye la sesión
+            window.location.href = "./controlador/logout.php"; // Cambia esto a la ruta donde está tu script de logout
+        }
+
+    </script>
 
 </body>
 </html>

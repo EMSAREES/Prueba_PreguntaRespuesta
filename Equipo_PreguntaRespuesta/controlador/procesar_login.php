@@ -45,8 +45,9 @@ if (isset($_POST['expositor'])) {
     if ($result->num_rows === 1) {
         // Login exitoso de Expositor
         $tema = $result->fetch_assoc();
+        $_SESSION['id_ponente'] = $tema['id_ponente']; // Guardar el ID del ponente
         $_SESSION['tema_ponente'] = $tema['Tema_ponente'];
-        $_SESSION['user_type'] = 'expositor'; // Guardamos el tipo de usuario
+        $_SESSION['user_type'] = 'expositor'; // Guardamos el tipo de usuari
         header("Location: /prueba_preguntarespuesta/Equipo_PreguntaRespuesta/ContenedorPregunta.php"); // Redirigir al formulario de expositor
         exit();
     } else {
